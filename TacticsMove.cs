@@ -20,10 +20,7 @@ public class TacticsMove : Init {
     public List<Tile> eyelist = new List<Tile>(); // List of the tiles that the player can see
     public List<Tile> movelist = new List<Tile>(); // List of the tiles that the player can move to
 
-    public Point[,] prev = new Point[MapLen + 1, MapWid + 1]; // Record the path of every tile
-
     Tile currentTile; // marking the tile that the player is standing
-    int currentx, currenty;
 
     // Find the tiles that the players can see
     public void SpfaEye(Tile t) {
@@ -109,7 +106,6 @@ public class TacticsMove : Init {
 
             for (int i = 0; i < 4; i++) {
                 Point v = new Point(u.x + dirx[i], u.y + diry[i]);
-                prev[v.x, v.y] = new Point(u.x, u.y);
                 if (dis[u.x, u.y] + movecost[MapType[v.x, v.y]] < dis[v.x, v.y]) {
                     dis[v.x, v.y] = dis[u.x, u.y] + movecost[MapType[v.x, v.y]];
                     if (!visited[v.x, v.y] && dis[v.x, v.y] <= maxmove) {
@@ -151,29 +147,11 @@ public class TacticsMove : Init {
 
     public void FindPath() {
         GetCurrentTile();
-        GameObject row = currentTile.transform.parent.gameObject;
-        currentx = int.Parse(row.name.Split('w')[1]);
-        currenty = int.Parse(currentTile.name.Split('e')[1]);
         SpfaEye(currentTile);
         SpfaMove(currentTile);
     }
 
     public bool Valid(Point p) {
         return p.x >= 0 && p.x <= MapLen && p.y >= 0 && p.y <= MapWid;
-    }
-
-    public void MoveToTile(GameObject tile) {
-        GameObject row = tile.transform.parent.gameObject;
-        int x = int.Parse(row.name.Split('w')[1]);
-        int y = int.Parse(tile.name.Split('e')[1]);
-
-        int i = x, j = y, tmpi = 0, tmpj = 0;
-        while (!(i == currentx && j == currenty)) {
-            tmpi = i;
-            tmpj = j;
-            i = prev[tmpi, tmpj].x;
-            j = prev[tmpi, tmpj].y;
-
-        } 
     }
 }

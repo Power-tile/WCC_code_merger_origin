@@ -29,9 +29,12 @@ public class Player1Move : TacticsMove {
 
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit)) {
-                GameObject now;
-                for (now = hit.collider.gameObject; now.tag != "Tile"; now = now.transform.parent.gameObject) {}
-                MoveToTile(now);
+                if (hit.collider.tag == "Tile") {
+                    Tile t = hit.collider.GetComponent<Tile>();
+                    if (t.selectable) {
+                        //MoveToTile(t);
+                    }
+                }
             }
         }
     }
